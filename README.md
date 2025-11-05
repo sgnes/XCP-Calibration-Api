@@ -42,19 +42,17 @@ This library assumes a little-endian target by default and focuses on scalar `VA
 
 ## Installation
 
-Place the `XcpCalibrationAPI` module alongside your `XcpCanMaster` and `A2LModel` implementations and import:
 
-```python
-from xcp_master import XcpCanMaster
-from a2l_parser import A2LModel
-from xcp_calibration_api import XcpCalibrationAPI  # rename to your actual file name
+```cmd
+pip install pyxcpcanmaster
+pip install pya2lparser
 ```
 
 ## Quick Start
 
 ```python
-from xcp_master import XcpCanMaster
-from a2l_parser import A2LModel
+from a2lparser.a2l_parser import A2LParser
+from xcp_can_master.xcp_master import XcpCanMaster
 from xcp_calibration_api import XcpCalibrationAPI
 
 # 1) Build the XCP master (configure CAN channel, XCP settings, etc.)
@@ -77,16 +75,19 @@ print("ENG_SPEED raw:", m["raw_value"], "phys:", m["physical_value"], m["unit"])
 c = api.read_characteristic("Idle_Target_RPM")
 print("Idle_Target_RPM phys:", c["physical_value"])
 
-# 7) Write a characteristic in physical units
+# 7) Switch to working page
+api.switch_cal_page(1)
+
+# 8) Write a characteristic in physical units
 api.write_characteristic("Idle_Target_RPM", 800.0)
 
-# 8) Raw memory access (advanced)
+# 9) Raw memory access (advanced)
 addr = 0x123456
 data = api.read_raw(address=addr, size=4)
 print("Raw 0x123456:", data.hex())
 api.write_raw(address=addr, data=b"\x01\x02\x03\x04")
 
-# 9) Disconnect
+# 10) Disconnect
 api.disconnect()
 ```
 
